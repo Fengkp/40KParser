@@ -1,4 +1,4 @@
-public class WeaponStats {
+public class WeaponStats extends Data {
     String name;
     String range;
     String type;

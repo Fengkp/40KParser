@@ -5,33 +5,25 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Main {
 
+    static ArrayList<Unit> units = new ArrayList<>();
+    static ArrayList<Ability> abilities = new ArrayList<>();
+    static ArrayList<ModelStats> models = new ArrayList<>();
+    static ArrayList<WeaponStats> weapons = new ArrayList<>();
+
     public static void main(String[] args) {
         final File file = new File("files/test.html");
-        // This will get the tables within the html and print out any relevant data.
-        // Still need to categorize.
         try {
-//            Document doc = Jsoup.parse(file, "UTF-8");
-//            Elements tables = doc.select("table");
-//            for (Element table : tables) {
-//                Elements rows = table.select("tr");
-//                for (Element row : rows) {
-//                    Elements cols = row.select("td");
-//                    System.out.println(cols.text());
-//                }
-//            }
             // Lists all units
 //            Document doc = Jsoup.parse(file, "UTF-8");
 //            Elements lists = doc.select("li.rootselection");
 //            for (Element list : lists) {
 //                System.out.println(list.select("h4").text());
 //            }
-            ArrayList<Unit> units = new ArrayList<>();
-            ArrayList<Ability> abilities = new ArrayList<>();
-            ArrayList<ModelStats> models = new ArrayList<>();
-            ArrayList<WeaponStats> weapons = new ArrayList<>();
+            // Iterates through each individual unit in the roster
             int count = 0;
             Document doc = Jsoup.parse(file, "UTF-8");
             Elements categories = doc.getElementsByClass("rootselection");
@@ -42,34 +34,46 @@ public class Main {
                     continue;
                 }
 
+                // Creates new unit with its name parameter
                 Unit unit = new Unit(category.select("h4").first().text());
+                // Adds any keywords associated with this unit
                 unit.keywords = category.getElementsByClass("category-names").first().text();
 
+                // Abilities
                 Elements modelTable = category.select("table");
-                for (Element row : modelTable.select("tr")) {
-                    System.out.println(row.select("th").text());
-                    System.out.println(row.select("td.profile-name").text());
-//                    System.out.println(row.select("td").text());
-//                    System.out.println("new row");
+                for (Element table : modelTable) {
+                    Elements rows = table.select("tr");
+                    if (rows.first().select("th:eq(0)").text().equals("Abilities"))
+                        addElements(rows, 2);
+                    if (rows.first().select("th:eq(0)").text().equals("Unit"))
+                        addElements(rows, 9);
                 }
 
                 units.add(unit);
                 System.out.println("new entry");
             }
-
-            for (Unit unit : units) {
-                System.out.println(unit.name);
-                System.out.println(unit.keywords);
-            }
-
-
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-        // Increment through each one instead of using 'Elements',
-        // get relevant tables (abilities, weapons, ect...)
-        // then go to the next.
+    public static void addElements(String dataType, Elements rows, int columnCount) {
+        rows.next();
+        Elements columns = rows.select("td");
+        if (dataType.equals("Abilities")) {
+            Data newData = new Ability();
+        }
+        int columnIndex = 0;
+        for (Element column : columns) {
+            if (columnIndex != columnCount)
+                newData.addElement(column.text(), columnIndex);
+            else {
+                abilities.add(newData);
+                newData = new Ability();
+                columnIndex = -1;
+            }
+            columnIndex++;
+        }
     }
 }
