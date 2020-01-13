@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class Unit {
     String name;
-    ArrayList<ModelStats> stats;
-    ArrayList<WeaponStats> weapons;
+    ArrayList<Model> stats;
+    ArrayList<Weapon> weapons;
     ArrayList<Ability> abilities;
     String keywords;
 
