@@ -7,7 +7,7 @@ public class Ability extends Data {
     }
 
     public String toString() {
-        return "Ability: " + super.getName() + "\nDescription: " + description;
+        return super.getName() + ": " + description;
     }
 
 }

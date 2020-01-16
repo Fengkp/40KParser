@@ -24,6 +24,7 @@ public class Model extends Data {
     }
 
     public String toString() {
-        return "Name: " + super.getName() + "\nMovement: " + movement;
+        return super.getName() + ": " + movement + " " + ballisticSkill + " " + weaponSkill + " " + strength
+                + " " + toughness + " " + wounds + " " + attacks + " " + leadership + " " + save;
     }
 }

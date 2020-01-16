@@ -25,8 +25,8 @@ public class Main {
             // Iterates through each individual unit in the roster
             int count = 0;
             Document doc = Jsoup.parse(file, "UTF-8");
-            Elements units = doc.getElementsByClass("rootselection");
-            for (Element unit : units) {
+            Elements allUnits = doc.getElementsByClass("rootselection");
+            for (Element unit : allUnits) {
                 // Skipping first one for now (Regiment/Doctrine/ect...)
                 if (count == 0) {
                     count++;
@@ -36,9 +36,9 @@ public class Main {
                 // Creates new unit with its name parameter
                 Unit newUnit = new Unit(unit.select("h4").first().text());
                 // Adds any keywords associated with this unit
-                newUnit.keywords = unit.getElementsByClass("category-names").first().text();
+                newUnit.setKeywords(unit.getElementsByClass("category-names").first().text());
 
-                // Abilities
+                // Get abilities and stats
                 Elements modelTables = unit.select("table");
                 for (Element table : modelTables) {
                     Elements rows = table.select("tr");
@@ -46,6 +46,7 @@ public class Main {
                     String columnData[];
                     int rowCount = 0;
 
+                    // Abilities
                     if (rows.first().select("th:eq(0)").text().equals("Abilities")) {
                         columnData = getColumnData(rows, 3);
                         Ability newAbilities[] = new Ability[rows.size() - 1];
@@ -54,9 +55,10 @@ public class Main {
                             Ability newAbility = new Ability(columnData[rowCount++], columnData[rowCount++]);
                             rowCount++; // Account for reference column.
                             newAbilities[i] = newAbility;
-                            System.out.println(newAbilities[i]);
                         }
+                        newUnit.setAbilities(newAbilities);
                     }
+                    // Unit stats
                     else if (rows.first().select("th:eq(0)").text().equals("Unit")) {
                         columnData = getColumnData(rows, 11);
                         Model newModels[] = new Model[rows.size() - 1];
@@ -68,9 +70,10 @@ public class Main {
                                     columnData[rowCount++], columnData[rowCount++]);
                             rowCount++; // Account for reference column.
                             newModels[i] = newModel;
-                            System.out.println(newModels[i]);
                         }
+                        newUnit.setModels(newModels);
                     }
+                    // Weapon Stats
                     else if (rows.first().select("th:eq(0)").text().equals("Weapon")) {
                         columnData = getColumnData(rows, 8);
                         Weapon newWeapons[] = new Weapon[rows.size() - 1];
@@ -81,12 +84,24 @@ public class Main {
                                     columnData[rowCount++], columnData[rowCount++]);
                             rowCount++; // Account for reference column.
                             newWeapons[i] = newWeapon;
-                            System.out.println(newWeapons[i]);
                         }
+                        newUnit.setWeapons(newWeapons);
+                    }
+                    else if (rows.first().select("th:eq(0)").text().equals("Stat Damage - M/BS/A")) {
+                        columnData = getColumnData(rows, 6);
+                        Vehicle newVehicles[] = new Vehicle[rows.size() - 1];
+
+                        for (int i = 0; i < newVehicles.length; i++) {
+                            Vehicle newVehicle = new Vehicle(columnData[rowCount++], columnData[rowCount++],
+                                    columnData[rowCount++], columnData[rowCount++], columnData[rowCount++]);
+                            rowCount++; // Account for reference column.
+                            newVehicles[i] = newVehicle;
+                        }
+                        newUnit.setVehicles(newVehicles);
                     }
                 }
-
-                units.add(unit);
+                units.add(newUnit);
+                newUnit.displayUnit();
                 System.out.println("new entry");
             }
         }
