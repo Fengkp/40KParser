@@ -65,8 +65,10 @@ public class Unit extends Data {
         }
         System.out.println("Models: ");
         super.displayList(models);
-        System.out.println("Weapons: ");
-        super.displayList(weapons);
+        if (weapons != null) {
+            System.out.println("Weapons: ");
+            super.displayList(weapons);
+        }
         System.out.println("Keywords: " + keywords);
 
     }
