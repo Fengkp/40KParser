@@ -1,3 +1,5 @@
+package Models;
+
 public abstract class Data<T> {
     private String name;
 

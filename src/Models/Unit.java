@@ -1,3 +1,5 @@
+package Models;
+
 public class Unit extends Data {
     private Model models[];
     private Weapon weapons[];
@@ -54,7 +56,7 @@ public class Unit extends Data {
     }
 
     public void displayUnit() {
-        System.out.println("Unit Name: " + super.getName());
+        System.out.println("Models.Unit Name: " + super.getName());
         if (abilities != null) {
             System.out.println("Abilities: ");
             super.displayList(abilities);

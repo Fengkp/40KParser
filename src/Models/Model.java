@@ -1,3 +1,5 @@
+package Models;
+
 public class Model extends Data {
     private String movement;
     private String weaponSkill;
@@ -9,18 +11,17 @@ public class Model extends Data {
     private String leadership;
     private String save;
 
-    public Model(String name, String m, String wS, String bS, String s, String t, String w,
-                 String a, String l, String sv) {
-        super.setName(name);
-        movement = m;
-        weaponSkill = wS;
-        ballisticSkill = bS;
-        strength = s;
-        toughness = t;
-        wounds = w;
-        attacks = a;
-        leadership = l;
-        save = sv;
+    public Model(String[] data) {
+        super.setName(data[0]);
+        movement = data[1];
+        weaponSkill = data[2];
+        ballisticSkill = data[3];
+        strength = data[4];
+        toughness = data[5];
+        wounds = data[6];
+        attacks = data[7];
+        leadership = data[8];
+        save = data[9];
     }
 
     public String toString() {
