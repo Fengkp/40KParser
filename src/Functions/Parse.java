@@ -15,8 +15,8 @@ public class Parse {
         try {
             // Iterates through each individual unit in the roster
             Document doc = Jsoup.parse(file, "UTF-8");
-            displayListOfUnits(doc);
-            Elements categories = trimCategories(doc);
+            displayListOfUnits(doc.select("li.rootselection"));
+            Elements categories = trimCategories(doc.getElementsByClass("category"));
 
             for (Element category : categories) {
                 Elements allUnits = category.getElementsByClass("rootselection");
@@ -100,17 +100,14 @@ public class Parse {
     }
 
     // Display a list of units within given file.
-    public void displayListOfUnits(Document doc) {
-        Elements lists = doc.select("li.rootselection");
+    public void displayListOfUnits(Elements lists) {
         for (Element list : lists)
             System.out.println(list.select("h4").text());
         System.out.println();
     }
 
     // Removes any sections that do not contain units. (Doctrines, detachment rules, ect...)
-    public Elements trimCategories(Document doc) {
-        Elements categories = doc.getElementsByClass("category");
-
+    public static Elements trimCategories(Elements categories) {
         for (int i = 0; i < categories.size(); i++)
             if (categories.get(i).select("h3").first().text().contains("No Force Org Slot"))
                 categories.remove(i);
